@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>External Flow Test</title>
+  <!-- Bootstrap CSS CDN -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+</head>
+<body class="bg-light d-flex justify-content-center align-items-center vh-100">
+  <div class="card shadow p-4 text-center" style="max-width: 350px; width: 100%;">
+    <h1 class="mb-4">Choose your outcome</h1>
+    <div class="d-flex justify-content-around mb-3">
+      <button id="successBtn" class="btn btn-success btn-lg px-4">Success</button>
+      <button id="cancelBtn" class="btn btn-secondary btn-lg px-4">Cancel</button>
+    </div>
+    <div id="errorMsg" class="text-danger small"></div>
+  </div>
+
+  <script>
+    // Function to get URL parameter by name
+    function getParam(name) {
+      const params = new URLSearchParams(window.location.search);
+      return params.get(name);
+    }
+
+    const successUrl = getParam('success');
+    const cancelUrl = getParam('cancel');
+    const errorMsg = document.getElementById('errorMsg');
+    const successBtn = document.getElementById('successBtn');
+    const cancelBtn = document.getElementById('cancelBtn');
+
+    // Validate URLs (basic check)
+    function isValidUrl(url) {
+      try {
+        new URL(url);
+        return true;
+      } catch {
+        return false;
+      }
+    }
+
+    if (!successUrl || !isValidUrl(successUrl)) {
+      successBtn.disabled = true;
+      errorMsg.textContent = 'Invalid or missing "success" URL in query string.';
+    }
+    if (!cancelUrl || !isValidUrl(cancelUrl)) {
+      cancelBtn.disabled = true;
+      if (errorMsg.textContent) {
+        errorMsg.textContent += ' ';
+      }
+      errorMsg.textContent += 'Invalid or missing "cancel" URL in query string.';
+    }
+
+    successBtn.addEventListener('click', () => {
+      if (isValidUrl(successUrl)) {
+        window.location.href = successUrl;
+      }
+    });
+
+    cancelBtn.addEventListener('click', () => {
+      if (isValidUrl(cancelUrl)) {
+        window.location.href = cancelUrl;
+      }
+    });
+  </script>
+</body>
+</html>
