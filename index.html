@@ -14,8 +14,8 @@
   <div class="card shadow p-4 text-center" style="max-width: 350px; width: 100%;">
     <h1 class="mb-4">Choose your outcome</h1>
     <div class="d-flex justify-content-around mb-3">
-      <button id="successBtn" class="btn btn-success btn-lg px-4">Success</button>
-      <button id="cancelBtn" class="btn btn-secondary btn-lg px-4">Cancel</button>
+      <a id="successLink" class="btn btn-success btn-lg px-4" role="button">Success</a>
+      <a id="cancelLink" class="btn btn-secondary btn-lg px-4" role="button">Cancel</a>
     </div>
     <div id="errorMsg" class="text-danger small"></div>
   </div>
@@ -30,8 +30,8 @@
     const successUrl = getParam('success');
     const cancelUrl = getParam('cancel');
     const errorMsg = document.getElementById('errorMsg');
-    const successBtn = document.getElementById('successBtn');
-    const cancelBtn = document.getElementById('cancelBtn');
+    const successLink = document.getElementById('successLink');
+    const cancelLink = document.getElementById('cancelLink');
 
     // Validate URLs (basic check)
     function isValidUrl(url) {
@@ -43,29 +43,25 @@
       }
     }
 
-    if (!successUrl || !isValidUrl(successUrl)) {
-      successBtn.disabled = true;
+    // Set href or disable link if invalid
+    if (successUrl && isValidUrl(successUrl)) {
+      successLink.href = successUrl;
+    } else {
+      successLink.classList.add('disabled');
+      successLink.setAttribute('aria-disabled', 'true');
       errorMsg.textContent = 'Invalid or missing "success" URL in query string.';
     }
-    if (!cancelUrl || !isValidUrl(cancelUrl)) {
-      cancelBtn.disabled = true;
+
+    if (cancelUrl && isValidUrl(cancelUrl)) {
+      cancelLink.href = cancelUrl;
+    } else {
+      cancelLink.classList.add('disabled');
+      cancelLink.setAttribute('aria-disabled', 'true');
       if (errorMsg.textContent) {
         errorMsg.textContent += ' ';
       }
       errorMsg.textContent += 'Invalid or missing "cancel" URL in query string.';
     }
-
-    successBtn.addEventListener('click', () => {
-      if (isValidUrl(successUrl)) {
-        window.location.href = successUrl;
-      }
-    });
-
-    cancelBtn.addEventListener('click', () => {
-      if (isValidUrl(cancelUrl)) {
-        window.location.href = cancelUrl;
-      }
-    });
   </script>
 </body>
 </html>
